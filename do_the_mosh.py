@@ -9,6 +9,7 @@ parser.add_argument('--output_width', default=1920, type=int, help='Width of out
 parser.add_argument('--start_frame', '-s', default=0, type=int, help='start frame of the mosh')
 parser.add_argument('--end_frame', '-e', default=-1, type=int, help='end frame of the mosh')
 parser.add_argument('--fps', '-f', default=30, type=int, help='fps to convert initial video to')
+parser.add_argument('-o', default='moshed.mp4', type=str, dest='output_video', help='output file for the moshed video')
 parser.add_argument('--delta', '-d', action='store_true')
 args = parser.parse_args().__dict__
 
@@ -18,11 +19,10 @@ start_frame = args['start_frame']
 end_frame = args['end_frame']
 fps = args['fps']
 delta = args['delta']
+output_video = args['output_video']
 
-file_name = os.path.splitext(os.path.basename(input_video))[0]
 input_avi = 'datamoshing_input.avi'  # must be an AVI so i-frames can be located in binary file
 output_avi = 'datamoshing_output.avi'
-output_video = f'{file_name}_moshed.mp4'
 
 # convert original file to avi
 subprocess.call('ffmpeg -loglevel error -y -i ' + input_video + ' ' +
