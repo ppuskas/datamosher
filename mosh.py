@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import argparse
 import subprocess
@@ -10,7 +12,7 @@ parser.add_argument('--start_frame', '-s', default=0, type=int, help='start fram
 parser.add_argument('--end_frame', '-e', default=-1, type=int, help='end frame of the mosh')
 parser.add_argument('--fps', '-f', default=30, type=int, help='fps to convert initial video to')
 parser.add_argument('-o', default='moshed.mp4', type=str, dest='output_video', help='output file for the moshed video')
-parser.add_argument('--delta', '-d', action='store_true')
+parser.add_argument('--delta', '-d', default=1, type=int, help='number of delta frames to repeat')
 args = parser.parse_args().__dict__
 
 input_video = args['input_video']
@@ -27,61 +29,91 @@ output_avi = 'datamoshing_output.avi'
 # convert original file to avi
 subprocess.call('ffmpeg -loglevel error -y -i ' + input_video + ' ' +
                 ' -crf 0 -pix_fmt yuv420p -bf 0 -b 4096k -r ' + str(fps) + ' ' +
-                # ' -ss ' + str(start_sec) + ' -to ' + str(end_sec) + ' ' +
                 input_avi, shell=True)
 
 # open up the new files so we can read and write bytes to them
 in_file = open(input_avi, 'rb')
 out_file = open(output_avi, 'wb')
 
+
+def cleanup():
+    # gets rid of the in-between files so they're not crudding up your system
+    in_file.close()
+    out_file.close()
+    os.remove(input_avi)
+    os.remove(output_avi)
+    exit(0)
+
+
 # because we used 'rb' above when the file is read the output is in byte format instead of Unicode strings
 in_file_bytes = in_file.read()
 
 # 0x30306463 which is ASCII 00dc signals the end of a frame.
-frame_end = bytes.fromhex('30306463')
+frame_start = bytes.fromhex('30306463')
 
 # get all frames of video
-frames = in_file_bytes.split(frame_end)
+frames = in_file_bytes.split(frame_start)
 
-# 0x0001B0 signals the beginning of an i-frame. Additional info: 0x0001B6 signals a p-frame
+# write header
+out_file.write(frames[0])
+frames = frames[1:]
+
+# 0x0001B0 signals the beginning of an i-frame, 0x0001B6 signals a p-frame
 iframe = bytes.fromhex('0001B0')
+pframe = bytes.fromhex('0001B6')
+
+
+n_video_frames = len([frame for frame in frames if frame[5:8] == iframe or frame[5:8] == pframe])
+if end_frame < 0:
+    end_frame = n_video_frames
+
+
+def write_frame(frame):
+    out_file.write(frame_start + frame)
 
 
 def mosh_iframe_removal():
     for index, frame in enumerate(frames):
-        if index < start_frame or 0 < end_frame < index or frame[5:8] != iframe:
-            out_file.write(frame + frame_end)
+        if index < start_frame or end_frame < index or frame[5:8] != iframe:
+            out_file.write(frame_start + frame)
 
 
-def mosh_delta_repeat():
-    to_repeat = b''
+def mosh_delta_repeat(n_repeat):
+    # check we have enough room to repeat
+    if n_repeat > end_frame - start_frame:
+        print('not enough frames to repeat')
+        cleanup()
+
+    repeat_frames = []
+    repeat_index = 0
     for index, frame in enumerate(frames):
-        if index < start_frame or 0 < end_frame < index:
-            out_file.write(frame + frame_end)
-        elif index > start_frame and (end_frame < 0 or index < end_frame):
-            if to_repeat == b'' and frame[5:8] != iframe:
-                to_repeat = frame
-            elif to_repeat != b'':
-                out_file.write(to_repeat + frame_end)
-            else:
-                out_file.write(frame + frame_end)
+        # I don't know why this is a thing but it is
+        if (frame[5:8] != iframe and frame[5:8] != pframe) or not start_frame <= index < end_frame:
+            write_frame(frame)
+            continue
+
+        if len(repeat_frames) < n_repeat and frame[5:8] != iframe:
+            # get initial frames to write
+            repeat_frames.append(frame)
+            write_frame(frame)
+        elif len(repeat_frames) == n_repeat:
+            write_frame(repeat_frames[repeat_index])
+            repeat_index = (repeat_index + 1) % n_repeat
+        else:
+            # this case happens when the starting frame is an iframe
+            write_frame(frame)
 
 
 if delta:
-    mosh_delta_repeat()
+    mosh_delta_repeat(delta)
 else:
     mosh_iframe_removal()
 
-in_file.close()
-out_file.close()
 
 # export the video
 subprocess.call('ffmpeg -loglevel error -y -i ' + output_avi + ' ' +
                 ' -crf 18 -pix_fmt yuv420p -vcodec libx264 -acodec aac -r ' + str(fps) + ' ' +
-                ' -vf "scale=' + str(output_width) + ':-2:flags=lanczos" ' + ' ' +
-                # ' -ss ' + str(start_sec) + ' -to ' + str(end_sec) + ' ' +
+                ' -vf "scale=' + str(output_width) + ':-2:flags=lanczos" ' +
                 output_video, shell=True)
 
-# gets rid of the in-between files so they're not crudding up your system
-os.remove(input_avi)
-os.remove(output_avi)
+cleanup()
