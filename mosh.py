@@ -28,7 +28,7 @@ output_avi = 'datamoshing_output.avi'
 
 # convert original file to avi
 subprocess.call('ffmpeg -loglevel error -y -i ' + input_video + ' ' +
-                ' -crf 0 -pix_fmt yuv420p -bf 0 -b 4096k -r ' + str(fps) + ' ' +
+                ' -crf 0 -pix_fmt yuv420p -bf 0 -b 10000k -r ' + str(fps) + ' ' +
                 input_avi, shell=True)
 
 # open up the new files so we can read and write bytes to them
@@ -112,7 +112,7 @@ else:
 
 # export the video
 subprocess.call('ffmpeg -loglevel error -y -i ' + output_avi + ' ' +
-                ' -crf 18 -pix_fmt yuv420p -vcodec libx264 -acodec aac -r ' + str(fps) + ' ' +
+                ' -crf 18 -pix_fmt yuv420p -vcodec libx264 -acodec aac -b 10000k -r ' + str(fps) + ' ' +
                 ' -vf "scale=' + str(output_width) + ':-2:flags=lanczos" ' +
                 output_video, shell=True)
 
