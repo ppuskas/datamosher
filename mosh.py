@@ -12,7 +12,7 @@ parser.add_argument('--start_frame', '-s', default=0, type=int, help='start fram
 parser.add_argument('--end_frame', '-e', default=-1, type=int, help='end frame of the mosh')
 parser.add_argument('--fps', '-f', default=30, type=int, help='fps to convert initial video to')
 parser.add_argument('-o', default='moshed.mp4', type=str, dest='output_video', help='output file for the moshed video')
-parser.add_argument('--delta', '-d', default=1, type=int, help='number of delta frames to repeat')
+parser.add_argument('--delta', '-d', default=0, type=int, help='number of delta frames to repeat')
 args = parser.parse_args().__dict__
 
 input_video = args['input_video']

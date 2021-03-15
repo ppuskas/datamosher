@@ -7,7 +7,7 @@ import os
 parser = argparse.ArgumentParser()
 parser.add_argument('input_video', type=str, help='specifies input file')
 parser.add_argument('-s', type=str, dest='script_path', help='path to the js script', required=True)
-parser.add_argument('-g', type=str, default=300, dest='gop_period', help='I-frame period (in frames)')
+parser.add_argument('-g', type=str, default=1000, dest='gop_period', help='I-frame period (in frames)')
 parser.add_argument('-o', default='moshed.mpg', type=str, dest='output_video', help='output file for the moshed video')
 args = parser.parse_args().__dict__
 
