@@ -17,7 +17,7 @@ Repeats a series of p-frames (aka delta frames), which can give a 'melting' effe
 `python mosh.py input.mp4 -d 30 -s 30 -e 120 -o output.mp4` copies frames with indexes [30, 59] and overwrites frames [60, 89] and [90, 119] with the copied data.
 
 ## Vector motion
-While the previous effects copy and delete whole frames, this one changes the actual frame data. As explained in [this article on ffglitch.org](https://ffglitch.org/2020/07/mv.html), you need to write a custom JavaScript file that can change the frame data. `vector_motion.py` is just a wrapper for `ffedit` and `ffgac`.
+While the previous effects copy and delete whole frames, this one changes the actual frame data. As explained in [this article on ffglitch.org](https://ffglitch.org/2020/07/mv.html), you need to write a custom JavaScript file that can change the frame data. `vector_motion.py` is just a wrapper for `ffedit` and `ffgac` and makes moshing possible through only one command.
 Example:
 
 `python vector_motion.py input.mp4 -s your_script.js -o output.mp4`
