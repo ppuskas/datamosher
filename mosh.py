@@ -7,7 +7,6 @@ import subprocess
 
 parser = argparse.ArgumentParser()
 parser.add_argument('input_video', type=str, help='File to be moshed')
-parser.add_argument('--output_width', default=1920, type=int, help='Width of output video in pixels.')
 parser.add_argument('--start_frame', '-s', default=0, type=int, help='start frame of the mosh')
 parser.add_argument('--end_frame', '-e', default=-1, type=int, help='end frame of the mosh')
 parser.add_argument('--fps', '-f', default=30, type=int, help='fps to convert initial video to')
@@ -16,7 +15,6 @@ parser.add_argument('--delta', '-d', default=0, type=int, help='number of delta 
 args = parser.parse_args().__dict__
 
 input_video = args['input_video']
-output_width = args['output_width']
 start_frame = args['start_frame']
 end_frame = args['end_frame']
 fps = args['fps']
@@ -113,7 +111,6 @@ else:
 # export the video
 subprocess.call('ffmpeg -loglevel error -y -i ' + output_avi + ' ' +
                 ' -crf 18 -pix_fmt yuv420p -vcodec libx264 -acodec aac -b 10000k -r ' + str(fps) + ' ' +
-                ' -vf "scale=' + str(output_width) + ':-2:flags=lanczos" ' +
                 output_video, shell=True)
 
 cleanup()
