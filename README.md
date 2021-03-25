@@ -38,6 +38,12 @@ Example:
 
     $ python vector_motion.py input.mp4 -s your_script.js -o output.mp4
 
+**WARNING** No matter what name the output file has, it will always be of type mpg (and because we glitched it, video players
+will probably have trouble reading its length). To convert it to mp4, you can use `ffmpeg`:
+
+    $ ffmpeg -i input.mpg output.mp4
+
+It will complain about corrupt p-frame data, but the result should look the same as in the mpg.
 
 ### Now also with Python!
 
