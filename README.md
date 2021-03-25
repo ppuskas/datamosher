@@ -63,16 +63,16 @@ apply it to a video.
 
 Examples:
 
-    $ python style_transfer.py -e person_talking.mp4 -t clouds.mp4 -o output.mp4
+    $ python style_transfer.py -e person_talking.mp4 -t clouds.mp4 output.mp4
 
 extracts vector data from `person_talking.mp4`, transfers it to `clouds.mp4` and outputs the video to `output.mp4`.
 
 
-    $ python style_transfer.py -e person_talking.mp4 -o vectors.json
+    $ python style_transfer.py -e person_talking.mp4 vectors.json
 
 extracts the vector data from `person_talking.mp4` and outputs it to `vectors.json`.
 
 
-    $ python style_transfer.py -v vectors.json -t clouds.mp4 -o output.mp4
+    $ python style_transfer.py -v vectors.json -t clouds.mp4 output.mp4
 
 loads vector data from `vectors.json`, transfers it to `clouds.mp4` and outputs the video to `output.mp4`.
