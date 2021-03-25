@@ -63,20 +63,20 @@ apply it to a video.
 
 Examples:
 
-    $ python style_transfer.py -e person_talking.mp4 -t clouds.mp4 output.mp4
+    $ python style_transfer.py -e clouds.mp4 -t trees.mp4 output.mp4
 
-extracts vector data from `person_talking.mp4`, transfers it to `clouds.mp4` and outputs the video to `output.mp4`.
+extracts vector data from `clouds.mp4`, transfers it to `trees.mp4` and outputs the video to `output.mp4`.
 
 | Extract style from | Transfer style to | Result |
 |:------------------:|:-----------------:|:------:|
 | ![clouds](https://user-images.githubusercontent.com/31802439/112489124-70a21c00-8d7e-11eb-8640-6817a46602ca.gif) | ![trees](https://user-images.githubusercontent.com/31802439/112489146-74ce3980-8d7e-11eb-9091-999fbb98552c.gif) | ![ct](https://user-images.githubusercontent.com/31802439/112489221-86afdc80-8d7e-11eb-9a51-14d91ec7cdfa.gif) |
 
 
-    $ python style_transfer.py -e person_talking.mp4 vectors.json
+    $ python style_transfer.py -e clouds.mp4 vectors.json
 
-extracts the vector data from `person_talking.mp4` and outputs it to `vectors.json`.
+extracts the vector data from `clouds.mp4` and outputs it to `vectors.json`.
 
 
-    $ python style_transfer.py -v vectors.json -t clouds.mp4 output.mp4
+    $ python style_transfer.py -v vectors.json -t trees.mp4 output.mp4
 
-loads vector data from `vectors.json`, transfers it to `clouds.mp4` and outputs the video to `output.mp4`.
+loads vector data from `vectors.json`, transfers it to `trees.mp4` and outputs the video to `output.mp4`.
