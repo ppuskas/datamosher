@@ -2,25 +2,32 @@ Datamoshing made easy.
 
 ## Requirements
 `mosh.py` requires `ffmpeg` to be installed.
-`vector_motion.py` and `style_transfer.py` rely on `ffedit` and `ffgac`, which can be downloaded from
-[ffglitch.org](https://ffglitch.org/)
+
+`vector_motion.py` and `style_transfer.py` depend on `ffedit` and `ffgac`, which can be downloaded from [ffglitch.org](https://ffglitch.org/)
 
 # Effects
 
-## I frame removal
+## i-frame removal
 This type of glitch creates the transition effect. Example:
+
+| Original | Moshed |
+|:--------:|:------:|
+| ![original_hand](https://user-images.githubusercontent.com/31802439/112060042-f3e42780-8b5c-11eb-8019-df4d06dd0d31.gif) | ![moshed_hand](https://user-images.githubusercontent.com/31802439/112060033-f181cd80-8b5c-11eb-9025-65064bbc6200.gif) |
 
     $ python mosh.py input.mp4 -s 40 -e 90 -o output.mp4
 removes all the i-frames from the input video starting at frame 40 and ending at frame 90, and outputs the final result
 to `output.mp4`
 
-## Delta frame duplication
-Repeats a series of p-frames (aka delta frames), which can give a 'melting' effect. This type of glitch is triggered by
-the `-d` flag. Example:
+## p-frame duplication
+Repeats a series of p-frames (aka delta frames), which can give a 'melting' effect. This type of glitch is triggered by the `-d` flag. Example:
 
-    $ python mosh.py input.mp4 -d 30 -s 30 -e 120 -o output.mp4
+| Original | Moshed |
+|:--------:|:------:|
+| ![original_dog](https://user-images.githubusercontent.com/31802439/112059335-0316a580-8b5c-11eb-98c8-3493969dd472.gif) | ![moshed_dog](https://user-images.githubusercontent.com/31802439/112060106-065e6100-8b5d-11eb-9670-4ad3bd9522cd.gif) |
 
-copies frames with indexes [30, 59] and overwrites frames [60, 89] and [90, 119] with the copied data.
+    $ python mosh.py dog.mp4 -d 5 -s 165 -o moshed_dog.mp4
+
+copies 5 frames starting at frame 165, then replaces all subsequent groups of 5 frames with the copied data (in this case until the video ends, as no `-e` flag was specified).
 
 ## Vector motion
 While the previous effects copy and delete whole frames, this one changes the actual frame data. As explained in
