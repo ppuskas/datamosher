@@ -7,7 +7,7 @@ This is a ffglitch wrapper that allows implementing vector motion moshing in pyt
 
 `vector_motion.py` and `style_transfer.py` depend on `ffedit` and `ffgac`, which can be downloaded from [ffglitch.org](https://ffglitch.org/)
 
-# Effects
+# Effects you can achieve
 
 ## i-frame removal
 This type of glitch creates the transition effect. Example:
@@ -47,27 +47,23 @@ will probably have trouble reading its length). To convert it to mp4, you can us
 
 It will complain about corrupt p-frame data, but the result should look the same as in the mpg.
 
-### Now also with Python!
+## Vector motion with Python
 
-If you prefer to use python to glitch the frames instead, you can also specify a python script for the `-s` option.
+If you prefer to use python to glitch the frames, you can specify a python script for the `-s` argument (see previous section for usage).
 The script must contain a function called `mosh_frames` that takes as argument an array of frames (warning: some of the frames
 might be empty), where each non-empty frame represents a 3D array of shape (height, width, 2). The function should
-return an array containing the modified vectors. 
+return an array of the same shape, representing the modified vectors. For reference, I have included two examples:
 
-`horizontal_motion_example.py` contains the equivalent python script of the js script presented in the
+`horizontal_motion_example.py` contains the equivalent python code of the js script from this 
 [ffglitch tutorial](https://ffglitch.org/2020/07/mv.html).
 
-`average_motion_example.py` is the equivalent of this [ffglitch average motion tutorial](https://ffglitch.org/2020/07/mv_avg.html)
+`average_motion_example.py` is the equivalent of [ffglitch average motion tutorial](https://ffglitch.org/2020/07/mv_avg.html)
 using numpy. Neat!
 
 
 ## Style transfer
-I call style transfer combining the motion vectors of two videos (by simply adding them together). For example,
-applying the vector motion data of a person talking to a video of clouds can make it look as though the clouds
-are talking. 
 
-This script can also extract motion vector data from a video and write it to a file, or read motion data from file and
-apply it to a video.
+This means combining the motion vectors of two videos, by simply adding them together (see example below). Note that if the videos do not have the same resolution (and framerate), the results might not look as desired.
 
 Examples:
 
@@ -80,10 +76,13 @@ extracts vector data from `clouds.mp4`, transfers it to `trees.mp4` and outputs 
 | ![clouds](https://user-images.githubusercontent.com/31802439/112489124-70a21c00-8d7e-11eb-8640-6817a46602ca.gif) | ![trees](https://user-images.githubusercontent.com/31802439/112489146-74ce3980-8d7e-11eb-9091-999fbb98552c.gif) | ![ct](https://user-images.githubusercontent.com/31802439/112489221-86afdc80-8d7e-11eb-9a51-14d91ec7cdfa.gif) |
 
 
+## Applying vector data manually
+
+You can also apply already extracted vector motion data, similar to ffglitch:
+
     $ python style_transfer.py -e clouds.mp4 vectors.json
 
 extracts the vector data from `clouds.mp4` and outputs it to `vectors.json`.
-
 
     $ python style_transfer.py -v vectors.json -t trees.mp4 output.mp4
 
