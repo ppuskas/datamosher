@@ -1,4 +1,6 @@
-Datamoshing made easy. 
+# Easy datamoshing with Python!
+
+This is a ffglitch wrapper that allows implementing vector motion moshing in python.
 
 ## Requirements
 `mosh.py` requires `ffmpeg` to be installed.
